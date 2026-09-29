@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>노원구 밤길 안전 지도 - 조도 분석</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🌙 노원구 밤길 안전 지도</h1>
+            <p>우리가 직접 측정한 조도 데이터 기반 실시간 안전 정보</p>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <div class="info-panel">
+                    <h2>측정 정보</h2>
+                    <div class="measurement-info">
+                        <p><strong>측정 시간:</strong> 21:00 ~ 22:00</p>
+                        <p><strong>측정 날짜:</strong> 2026년</p>
+                        <p><strong>측정 장소:</strong> 서울시 노원구 중계동</p>
+                        <p><strong>측정 위치:</strong> 10곳</p>
+                    </div>
+
+                    <h3>위험도 기준</h3>
+                    <div class="legend">
+                        <div class="legend-item danger">
+                            <span class="legend-color" style="background-color: #d32f2f;"></span>
+                            <span>위험 ≤ 10 lx</span>
+                        </div>
+                        <div class="legend-item warning">
+                            <span class="legend-color" style="background-color: #f57c00;"></span>
+                            <span>주의 11-30 lx</span>
+                        </div>
+                        <div class="legend-item safe">
+                            <span class="legend-color" style="background-color: #388e3c;"></span>
+                            <span>안전 > 30 lx</span>
+                        </div>
+                    </div>
+
+                    <h3>측정 장소 목록</h3>
+                    <div class="locations-list" id="locationsList"></div>
+                </div>
+            </aside>
+
+            <main class="map-container">
+                <div id="map"></div>
+            </main>
+        </div>
+
+        <section class="analysis-section">
+            <h2>📊 분석 결과</h2>
+            <div class="analysis-content">
+                <div class="chart-container">
+                    <div class="stats">
+                        <div class="stat-card danger-bg">
+                            <div class="stat-number" id="dangerCount">0</div>
+                            <div class="stat-label">위험 구역</div>
+                        </div>
+                        <div class="stat-card warning-bg">
+                            <div class="stat-number" id="warningCount">0</div>
+                            <div class="stat-label">주의 구역</div>
+                        </div>
+                        <div class="stat-card safe-bg">
+                            <div class="stat-number" id="safeCount">0</div>
+                            <div class="stat-label">안전 구역</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="insights">
+                    <h3>주요 발견사항</h3>
+                    <ul id="insights-list">
+                        <li>조도 10 lx 이하의 위험 구역이 발견되어 추가 조명 설치가 필요합니다.</li>
+                        <li>아파트 단지 진입로와 골목길에서 특히 낮은 조도가 측정되었습니다.</li>
+                        <li>학원가 주변은 상대적으로 높은 조도가 유지되고 있습니다.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>본 지도는 노원구 지역 안전 개선을 위한 탐구활동 결과물입니다.</p>
+            <p>측정 데이터: 스마트폰 조도계(Lux meter) 및 GPS 좌표</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

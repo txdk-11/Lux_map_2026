@@ -46,7 +46,6 @@ const measurementData = [
 
 let map;
 let markers = [];
-let infoWindows = [];
 
 // 위험도 판정 함수
 function getSafetyStatus(lux) {
@@ -55,27 +54,19 @@ function getSafetyStatus(lux) {
     return { status: '안전', color: '#388e3c', class: 'safe' };
 }
 
-// Google Map 초기화
+// Leaflet 지도 초기화
 function initMap() {
     // 노원구 중계동 중심 좌표
-    const centerPoint = { lat: 37.6525, lng: 127.0585 };
+    const centerPoint = [37.6525, 127.0585];
 
-    map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: centerPoint,
-        mapTypeControl: true,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        fullscreenControl: true,
-        zoomControl: true,
-        streetViewControl: true,
-        styles: [
-            {
-                featureType: 'all',
-                elementType: 'labels.text.fill',
-                stylers: [{ color: '#333333' }]
-            }
-        ]
-    });
+    // Leaflet 지도 생성
+    map = L.map('map').setView(centerPoint, 16);
+
+    // OpenStreetMap 타일 추가 (무료)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+    }).addTo(map);
 
     // 마커 생성
     measurementData.forEach((location, index) => {
@@ -93,49 +84,45 @@ function initMap() {
 function createMarker(location, index) {
     const safety = getSafetyStatus(location.lux);
 
-    // 커스텀 마커 아이콘
-    const markerIcon = {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 12,
-        fillColor: safety.color,
-        fillOpacity: 0.9,
-        strokeColor: '#fff',
-        strokeWeight: 2
-    };
-
-    const marker = new google.maps.Marker({
-        position: { lat: location.lat, lng: location.lng },
-        map: map,
-        title: location.name,
-        icon: markerIcon,
-        animation: google.maps.Animation.DROP
-    });
-
-    // 인포윈도우 생성
-    const infoWindowContent = `
-        <div class="popup-content">
-            <div class="popup-location-name">${location.name}</div>
-            <div class="popup-lux-value">조도: <strong>${location.lux} lx</strong></div>
-            <div class="popup-status ${safety.class}">${safety.status}</div>
-            <div style="margin-top: 8px; font-size: 0.85em; color: #666;">
-                ${location.address}
+    // 커스텀 마커 생성 (원형 아이콘)
+    const customIcon = L.divIcon({
+        html: `
+            <div style="
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background-color: ${safety.color};
+                border: 3px solid white;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                color: white;
+                font-size: 12px;
+            ">
+                ${location.lux}
             </div>
-        </div>
-    `;
-
-    const infoWindow = new google.maps.InfoWindow({
-        content: infoWindowContent,
-        maxWidth: 250
+        `,
+        iconSize: [30, 30],
+        className: 'custom-marker'
     });
 
-    marker.addListener('click', () => {
-        // 열려있는 모든 인포윈도우 닫기
-        infoWindows.forEach(iw => iw.close());
-        infoWindow.open(map, marker);
-    });
+    // 마커 생성
+    const marker = L.marker([location.lat, location.lng], { icon: customIcon })
+        .addTo(map)
+        .bindPopup(`
+            <div class="popup-content">
+                <div class="popup-location-name">${location.name}</div>
+                <div class="popup-lux-value">조도: <strong>${location.lux} lx</strong></div>
+                <div class="popup-status ${safety.class}">${safety.status}</div>
+                <div style="margin-top: 8px; font-size: 0.85em; color: #666;">
+                    ${location.address}
+                </div>
+            </div>
+        `);
 
     markers.push(marker);
-    infoWindows.push(infoWindow);
 }
 
 // 통계 업데이트
@@ -177,11 +164,8 @@ function createLocationsList() {
         // 클릭 시 해당 마커로 이동 및 정보 표시
         locationItem.addEventListener('click', () => {
             const marker = markers[measurementData.indexOf(location)];
-            map.setCenter(marker.getPosition());
-            map.setZoom(17);
-            marker.setAnimation(google.maps.Animation.BOUNCE);
-            setTimeout(() => marker.setAnimation(null), 700);
-            infoWindows[measurementData.indexOf(location)].open(map, marker);
+            map.setView([location.lat, location.lng], 17);
+            marker.openPopup();
         });
 
         listContainer.appendChild(locationItem);
@@ -192,10 +176,3 @@ function createLocationsList() {
 document.addEventListener('DOMContentLoaded', () => {
     initMap();
 });
-
-// 구글 지도 로드 실패 시 에러 처리
-window.gm_authFailure = function() {
-    console.error('Google Maps API 인증에 실패했습니다. API 키를 확인해주세요.');
-    const mapContainer = document.getElementById('map');
-    mapContainer.innerHTML = '<div style="padding: 20px; color: red;">지도를 불러올 수 없습니다. API 키 설정을 확인해주세요.</div>';
-};

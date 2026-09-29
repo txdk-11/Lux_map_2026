@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>노원구 밤길 안전 지도 - 조도 분석</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <div class="container">
@@ -23,7 +21,7 @@
                         <p><strong>측정 시간:</strong> 21:00 ~ 22:00</p>
                         <p><strong>측정 날짜:</strong> 2026년</p>
                         <p><strong>측정 장소:</strong> 서울시 노원구 중계동</p>
-                        <p><strong>측정 위치:</strong> 10곳</p>
+                        <p><strong>측정 위치:</strong> 6곳</p>
                     </div>
 
                     <h3>위험도 기준</h3>
@@ -85,9 +83,13 @@
         <footer class="footer">
             <p>본 지도는 노원구 지역 안전 개선을 위한 탐구활동 결과물입니다.</p>
             <p>측정 데이터: 스마트폰 조도계(Lux meter) 및 GPS 좌표</p>
+            <p>지도 제공: Google Maps</p>
         </footer>
     </div>
 
     <script src="script.js"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxdQ0v5F-7J2vN3P8qR9sT0uV1wX2yZ3a&callback=initMap">
+    </script>
 </body>
 </html>

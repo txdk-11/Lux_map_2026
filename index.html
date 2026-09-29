@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>노원구 밤길 안전 지도 - 조도 분석</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <div class="container">
@@ -83,13 +85,10 @@
         <footer class="footer">
             <p>본 지도는 노원구 지역 안전 개선을 위한 탐구활동 결과물입니다.</p>
             <p>측정 데이터: 스마트폰 조도계(Lux meter) 및 GPS 좌표</p>
-            <p>지도 제공: Google Maps</p>
+            <p>지도 제공: OpenStreetMap (Leaflet)</p>
         </footer>
     </div>
 
     <script src="script.js"></script>
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxdQ0v5F-7J2vN3P8qR9sT0uV1wX2yZ3a&callback=initMap">
-    </script>
 </body>
 </html>
